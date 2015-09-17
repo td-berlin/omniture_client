@@ -1,0 +1,6 @@
+---
+omniture:
+  environment: :san_jose
+  username: what_the_username
+  secret:   what_the_secret
+  report_suite_id: what_the_report_suite_id
