@@ -126,9 +126,9 @@ module OmnitureClient
       begin
         parsed = JSON.parse(response.body)
         if parsed["error"] == "report_not_ready"
-          raise OmnitureClient::Exceptions::ReportNotReady.new(parsed)
+          raise OmnitureClient::Exceptions::ReportNotReady.new(response.body)
         else
-          raise OmnitureClient::Exceptions::RequestInvalid.new(parsed)
+          raise OmnitureClient::Exceptions::RequestInvalid.new(response.body)
         end
       rescue JSON::ParserError => e
         if response.code == 404
