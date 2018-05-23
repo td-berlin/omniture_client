@@ -22,6 +22,7 @@ module OmnitureClient
       @max_tries      = options[:max_tries]     || (DEFAULT_REPORT_TOTAL_WAIT_TIME / @wait_time).to_i
       @log            = options[:log]           || DEFAULT_LOG_IS_ACTIVE
       @auth_strategy  = options[:auth_strategy]
+      @http_options   = options.fetch(:http_options, {})
     end
 
     def request(method, parameters = {})
@@ -144,9 +145,9 @@ module OmnitureClient
 
       response = HTTParty.post(
         @environment + "?method=#{method}",
-        :body    => JSON.dump(data),
-        :headers => request_headers
-        )
+        @http_options.merge(:body => JSON.dump(data),
+                            :headers => request_headers)
+      )
 
       if response.code >= 400
         handle_errors(response)
