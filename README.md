@@ -24,11 +24,12 @@ Here's an example of initializing with X-WSSE authorization strategy:
 
     client = OmnitureClient::Client.new(
       :san_jose,
-      :auth_strategy =>
+      :auth_strategy => {
       	:name => :x_wsse,
       	:username => "what the username",
       	:secret   => "what the secret"
-      )
+      }
+    )
 
 
 #### Using oAuth
@@ -37,10 +38,11 @@ Here's an example of initializing with oauth authorization strategy:
 
     client = OmnitureClient::Client.new(
       :san_jose,
-      :auth_strategy =>
+      :auth_strategy => {
       	:name => :oauth,
       	:token => "what the token",
-      )
+      }
+    )
 
 ## usage
 
