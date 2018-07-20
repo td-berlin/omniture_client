@@ -50,9 +50,17 @@ module OmnitureClient
       raise OmnitureClient::Exceptions::RequestInvalid.new(response.body) \
         if json["reportID"].nil?
 
+      @last_report_id = json['reportID']
       log(Logger::INFO, "Report with ID (" + json["reportID"].to_s + ") queued.")
 
       json
+    end
+
+    def get_last_report
+      raise OmnitureClient::Exceptions::ReportNotFound.new('No report has been queued') \
+        if @last_report_id.nil?
+
+      get_enqueued_report(@last_report_id)
     end
 
     def get_queue
@@ -89,6 +97,10 @@ module OmnitureClient
       log(Logger::INFO, "Report with ID #{report_id} has finished processing.")
 
       response_body
+    end
+
+    def get_report(report_id)
+      get_enqueued_report(report_id)
     end
 
     def get_metrics(report_suite_id)

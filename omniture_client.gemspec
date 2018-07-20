@@ -4,7 +4,7 @@ $LOAD_PATH.unshift(lib) unless $LOAD_PATH.include?(lib)
 require 'omniture_client/version'
 
 Gem::Specification.new do |spec|
-  spec.name          = "td_omniture_client"
+  spec.name          = "omniture_client"
   spec.version       = OmnitureClient::VERSION
   spec.authors       = ["Sascha Knobloch"]
   spec.email         = ["saschaknobloch.dev@gmail.com"]
@@ -23,6 +23,6 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "minitest"
 
   spec.add_runtime_dependency("httparty")
-  spec.add_runtime_dependency("json")  
-  spec.add_runtime_dependency("logger")  
+  spec.add_runtime_dependency("json")
+  spec.add_runtime_dependency("logger")
 end
