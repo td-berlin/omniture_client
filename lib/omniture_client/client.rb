@@ -68,6 +68,37 @@ module OmnitureClient
       JSON.parse(response.body)
     end
 
+    def get_enqueued_report(report_id)
+      response_body = nil
+      done          = false
+      tries         = 0
+
+      begin
+        response      = send_request("Report.Get", {"reportID" => "#{report_id}"})
+        response_body = JSON.parse(response.body)
+        done          = true
+
+        log(Logger::INFO, "Fetching report #{report_id} done.")
+      rescue OmnitureClient::Exceptions::ReportNotReady => e
+        log(Logger::INFO, "Report #{report_id} not ready. Retrying in #{@wait_time} sec - Error: #{e}...")
+
+        tries += 1
+        if tries >= @max_tries
+          raise OmnitureClient::Exceptions::TriesExceeded.new({
+            error_msg: "Tried to fetch data for report #{report_id} #{tries} times with "   \
+                       "#{@wait_time} sec wait time between each request without success. " \
+                       "Maximum tries configured: #{@max_tries}"
+          }
+        )
+        end
+        sleep @wait_time
+      end while !done
+
+      log(Logger::INFO, "Report with ID #{report_id} has finished processing.")
+
+      response_body
+    end
+
     def get_report(report_id)
       get_enqueued_report(report_id)
     end
@@ -102,37 +133,6 @@ module OmnitureClient
     end
 
     private
-
-    def get_enqueued_report(report_id)
-      response_body = nil
-      done          = false
-      tries         = 0
-
-      begin
-        response      = send_request("Report.Get", {"reportID" => "#{report_id}"})
-        response_body = JSON.parse(response.body)
-        done          = true
-
-        log(Logger::INFO, "Fetching report #{report_id} done.")
-      rescue OmnitureClient::Exceptions::ReportNotReady => e
-        log(Logger::INFO, "Report #{report_id} not ready. Retrying in #{@wait_time} sec - Error: #{e}...")
-
-        tries += 1
-        if tries >= @max_tries
-          raise OmnitureClient::Exceptions::TriesExceeded.new({
-            error_msg: "Tried to fetch data for report #{report_id} #{tries} times with "   \
-                       "#{@wait_time} sec wait time between each request without success. " \
-                       "Maximum tries configured: #{@max_tries}"
-          }
-        )
-        end
-        sleep @wait_time
-      end while !done
-
-      log(Logger::INFO, "Report with ID #{report_id} has finished processing.")
-
-      response_body
-    end
 
     def handle_errors(response)
       parsed = nil
