@@ -23,6 +23,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency "minitest"
 
   spec.add_runtime_dependency("httparty")
-  spec.add_runtime_dependency("json")  
-  spec.add_runtime_dependency("logger")  
+  spec.add_runtime_dependency("json")
 end
